@@ -37,7 +37,7 @@
           1,
           null,
           1,
-          null,
+          1,
           null,
           null,
           null,
@@ -264,6 +264,9 @@
         "lines": [
           1,
           1,
+          null,
+          1,
+          1,
           1,
           null,
           null
@@ -274,8 +277,34 @@
           1,
           null
         ]
+      },
+      "/Users/jcortespomeo/m3/projects/rails-engine/lib/paginator.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          1,
+          2,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "/Users/jcortespomeo/m3/projects/rails-engine/app/serializers/merchants_serializer.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null
+        ]
       }
     },
-    "timestamp": 1626546096
+    "timestamp": 1626559543
   }
 }
