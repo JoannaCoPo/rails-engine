@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+SECTION ONE: RESTful Endpoints, Minimum Requirements:
+You will need to expose the following RESTful API endpoints for the following:
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Merchants:
+  get all merchants, a maximum of 20 at a time
+  get one merchant
+  get all items for a given merchant ID
+Items:
+  get all items, a maximum of 20 at a time
+  get one item
+  create an item
+  edit an item
+  delete an item
+  get the merchant data for a given item ID
