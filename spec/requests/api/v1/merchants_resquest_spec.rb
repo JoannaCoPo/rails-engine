@@ -62,7 +62,7 @@ describe "Merchants API", type: :request do
       expect(merchant[:name]).to be_a(String)
     end
 
-    it "rget all items for a given merchant ID" do
+    it "get all items for a given merchant ID" do
       merchant = create(:merchant)
       items = create_list(:item, 5, merchant: merchant)
 
