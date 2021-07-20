@@ -55,11 +55,11 @@ describe "Merchants API", type: :request do
 
       expect(response).to be_successful
 
-      expect(merchant).to have_key(:id)
-      expect(merchant[:id]).to eq(id)
+      expect(merchant[:data]).to have_key(:id)
+      expect(merchant[:data][:id]).to eq(id.to_s)
 
-      expect(merchant).to have_key(:name)
-      expect(merchant[:name]).to be_a(String)
+      expect(merchant[:data][:attributes]).to have_key(:name)
+      expect(merchant[:data][:attributes][:name]).to be_a(String)
     end
 
     it "get all items for a given merchant ID" do
