@@ -91,4 +91,18 @@ describe "Merchants API", type: :request do
       expect(merchant[:data].first[:attributes][:merchant_id]).to be_an(Integer)
     end
   end
+
+  describe 'sad paths' do
+    # postman - "sad path, fetching page 1 if page is 0 or lower"
+    it 'can return an array of data even if zero merchants found' do
+      get '/api/v1/merchants'
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(0)
+      expect(merchants[:data]).to be_an(Array)
+    end
+  end
 end
