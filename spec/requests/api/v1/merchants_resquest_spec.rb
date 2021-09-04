@@ -113,36 +113,6 @@ describe "Merchants API", type: :request do
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to be_a(String)
     end
-
-
-    it "get all items for a given merchant ID" do
-      merchant = create(:merchant)
-      items = create_list(:item, 5, merchant: merchant)
-
-      get "/api/v1/merchants/#{merchant.id}/items"
-
-      expect(response).to be_successful
-      expect(response.status).to eq(200)
-
-      merchant = JSON.parse(response.body, symbolize_names: true)
-
-      expect(merchant[:data].size).to eq(5)
-
-      expect(merchant[:data].first).to have_key(:id)
-      expect(merchant[:data].first[:id]).to be_a(String)
-
-      expect(merchant[:data].first[:attributes]).to have_key(:name)
-      expect(merchant[:data].first[:attributes][:name]).to be_a(String)
-
-      expect(merchant[:data].first[:attributes]).to have_key(:description)
-      expect(merchant[:data].first[:attributes][:description]).to be_a(String)
-
-      expect(merchant[:data].first[:attributes]).to have_key(:unit_price)
-      expect(merchant[:data].first[:attributes][:unit_price]).to be_a(Float)
-
-      expect(merchant[:data].first[:attributes]).to have_key(:merchant_id)
-      expect(merchant[:data].first[:attributes][:merchant_id]).to be_an(Integer)
-    end
   end
 
   # Sad Path: the user did something which didn’t cause an error but didn’t work out the way
@@ -165,10 +135,16 @@ describe "Merchants API", type: :request do
       expect(merchants[:data]).to eq([])
     end
 
-    # it 'returns a status code 404 if a merchant does not exist' do #404 Not Found
-    #   get "/api/v1/merchants/#{9999999999999999}"
-    #
-    #   expect(response).to have_http_status(404)
-    # end
+    it 'returns a status code 404 if a merchant does not exist' do #404 Not Found
+      get "/api/v1/merchants/#{9999999999999999}"
+      expect(response).to have_http_status(404)
+    end
+
+    it 'returns a status code 404 if request is not valid' do
+      get "/api/v1/merchants/string"
+
+      expect(response).to have_http_status(404)
+      expect(response.body).to match(/Couldn't find Merchant with 'id'=string/)
+    end
   end
 end
