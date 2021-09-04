@@ -105,8 +105,10 @@ describe "Merchants API", type: :request do
 
       expect(response).to be_successful
 
+      expect(merchant[:data]).to be_a(Hash)
       expect(merchant[:data]).to have_key(:id)
       expect(merchant[:data][:id]).to eq(id.to_s)
+      expect(merchant[:data][:type]).to eq('merchant')
 
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to be_a(String)
@@ -147,6 +149,10 @@ describe "Merchants API", type: :request do
   # they’d hoped. For example, searching for a merchant by name and getting zero results is a
   # “sad path”
 
+  # Edge Case: the user did something which broke the functionality of an endpoint. For example,
+  # a user searches for an item based on a negative price, or searching between revenue dates
+  # where the end date comes before the start date.
+
   describe 'sad paths/edge cases' do
     it 'returns an empty array when no data is available' do
       get '/api/v1/merchants'
@@ -158,5 +164,11 @@ describe "Merchants API", type: :request do
       expect(merchants[:data].count).to eq(0)
       expect(merchants[:data]).to eq([])
     end
+
+    # it 'returns a status code 404 if a merchant does not exist' do #404 Not Found
+    #   get "/api/v1/merchants/#{9999999999999999}"
+    #
+    #   expect(response).to have_http_status(404)
+    # end
   end
 end
