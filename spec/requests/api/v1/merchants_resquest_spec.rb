@@ -21,7 +21,7 @@ describe "Merchants API", type: :request do
       end
     end
 
-    it 'returns all merchants with a maximum of 20 at a time' do
+    it 'returns a maximum of 20 merchants with pagination params' do
       create_list(:merchant, 33)
 
       get '/api/v1/merchants', params: { per_page: 20 }
@@ -33,10 +33,23 @@ describe "Merchants API", type: :request do
       expect(merchants[:data].count).to eq(20)
     end
 
+    it 'returns a maximum of 20 merchants with unspecified pagination params' do
+      create_list(:merchant, 30)
+
+      get '/api/v1/merchants', params: { per_page: 20 }
+
+      # expect(response).to be_successful
+      expect(response).to have_http_status(200)
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(20)
+    end
+
     it 'it returns a maximum of 20 merchants per specified page' do
       create_list(:merchant, 33)
 
-      get '/api/v1/merchants', params: { per_page: 20, page: 2 }
+      get '/api/v1/merchants', params: { page: 2 }
 
       expect(response).to be_successful
 
@@ -61,6 +74,7 @@ describe "Merchants API", type: :request do
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to be_a(String)
     end
+
 
     it "get all items for a given merchant ID" do
       merchant = create(:merchant)
@@ -92,15 +106,18 @@ describe "Merchants API", type: :request do
     end
   end
 
-  describe 'sad paths' do
-    # postman - "sad path, fetching page 1 if page is 0 or lower"
-    it 'can return an array of data even if zero merchants found' do
+  # Sad Path: the user did something which didn’t cause an error but didn’t work out the way
+  # they’d hoped. For example, searching for a merchant by name and getting zero results is a
+  # “sad path”
+
+  describe 'sad paths/edge cases' do
+    it 'can return of data even if zero merchants found' do
       get '/api/v1/merchants'
 
       expect(response).to be_successful
 
       merchants = JSON.parse(response.body, symbolize_names: true)
-
+# require "pry"; binding.pry
       expect(merchants[:data].count).to eq(0)
       expect(merchants[:data]).to be_an(Array)
     end
