@@ -18,6 +18,12 @@ describe "Merchants API", type: :request do
       merchants[:data].each do |merchant|
         expect(merchant[:attributes]).to have_key(:name)
         expect(merchant[:attributes][:name]).to be_a(String)
+
+        expect(merchant).to have_key(:type)
+        expect(merchant[:type]).to eq "merchant"
+
+        expect(merchant).to have_key(:attributes)
+        expect(merchant[:attributes]).to be_a Hash
       end
     end
 
@@ -38,7 +44,6 @@ describe "Merchants API", type: :request do
 
       get '/api/v1/merchants', params: { per_page: 20 }
 
-      # expect(response).to be_successful
       expect(response).to have_http_status(200)
 
       merchants = JSON.parse(response.body, symbolize_names: true)
@@ -46,7 +51,7 @@ describe "Merchants API", type: :request do
       expect(merchants[:data].count).to eq(20)
     end
 
-    it 'it returns a maximum of 20 merchants per specified page' do
+    it 'returns a maximum of 20 merchants per specified page' do
       create_list(:merchant, 33)
 
       get '/api/v1/merchants', params: { page: 2 }
@@ -57,6 +62,38 @@ describe "Merchants API", type: :request do
 
       expect(merchants[:data].count).to eq(13)
       expect(merchants[:data].first[:attributes][:name]).to eq(Merchant.all[20].name)
+    end
+
+    it 'returns correct amounts for page and number per page specified' do
+      create_list(:merchant, 33)
+
+      all_merchants = Merchant.all
+
+      get '/api/v1/merchants', params: { page: 2, per_page: 10 }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(10)
+      expect(merchants[:data].first[:id]).to eq(all_merchants[10].id.to_s)
+      expect(merchants[:data].last[:id]).to eq(all_merchants[19].id.to_s)
+    end
+
+    it 'defaults to page 1 if page params isn less than 1' do
+      create_list(:merchant, 33)
+
+      all_merchants = Merchant.all
+
+      get '/api/v1/merchants', params: { page: -1 }
+
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(20)
+      expect(merchants[:data].first[:id]).to eq(all_merchants.first.id.to_s)
+      expect(merchants[:data].last[:id]).to eq(all_merchants[19].id.to_s)
     end
 
     it 'can return one merchant' do
@@ -111,15 +148,15 @@ describe "Merchants API", type: :request do
   # “sad path”
 
   describe 'sad paths/edge cases' do
-    it 'can return of data even if zero merchants found' do
+    it 'returns an empty array when no data is available' do
       get '/api/v1/merchants'
 
       expect(response).to be_successful
 
       merchants = JSON.parse(response.body, symbolize_names: true)
-# require "pry"; binding.pry
+
       expect(merchants[:data].count).to eq(0)
-      expect(merchants[:data]).to be_an(Array)
+      expect(merchants[:data]).to eq([])
     end
   end
 end
