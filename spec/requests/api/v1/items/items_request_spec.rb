@@ -31,25 +31,26 @@ describe 'Items Requests', type: :request do
         expect(item).to have_key(:attributes)
         expect(item[:attributes]).to be_a Hash
       end
+    end
 
-      it 'can create a new item' do
-        item_params = ({
-                        "name": "Create Item",
-                        "description": "A very useful item, you should buy it.",
-                        "unit_price": 17.99,
-                        "merchant_id": 11
-                        })
-        headers = {"CONTENT_TYPE" => "application/json"}
+    it 'can create a new item' do
+      merchant = create(:merchant)
+      item_params = ({
+                      "name": "Create Item",
+                      "description": "A very useful item, you should buy it.",
+                      "unit_price": 17.99,
+                      "merchant_id": "#{merchant.id}"
+                      })
+      headers = {"CONTENT_TYPE" => "application/json"}
 
-        post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
-        created_item = Item.last
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
 
-        expect(response).to be_successful
-        expect(created_item.name).to eq(item_params[:name])
-        expect(created_item.description).to eq(item_params[:description])
-        expect(created_item.unit_price).to eq(item_params[:unit_price])
-        expect(created_item.merchant_id).to eq(item_params[:merchant_id])
-      end
+      expect(response).to be_successful
+      expect(created_item.name).to eq(item_params[:name])
+      expect(created_item.description).to eq(item_params[:description])
+      expect(created_item.unit_price).to eq(item_params[:unit_price])
+      expect(created_item.merchant_id).to eq(item_params[:merchant_id].to_i)
     end
 
     describe 'sad paths/edge cases' do
