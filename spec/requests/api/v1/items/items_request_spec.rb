@@ -33,7 +33,7 @@ describe 'Items Requests', type: :request do
       end
     end
 
-    it 'can create a new item' do
+    it 'can create a new item with valid attributes' do
       merchant = create(:merchant)
       item_params = ({
                       "name": "Create Item",
@@ -47,6 +47,7 @@ describe 'Items Requests', type: :request do
       created_item = Item.last
 
       expect(response).to be_successful
+      expect(response).to have_http_status(201)
       expect(created_item.name).to eq(item_params[:name])
       expect(created_item.description).to eq(item_params[:description])
       expect(created_item.unit_price).to eq(item_params[:unit_price])
@@ -63,6 +64,43 @@ describe 'Items Requests', type: :request do
 
         expect(items[:data].count).to eq(0)
         expect(items[:data]).to eq([])
+      end
+
+      it 'returns an error if any attribute is missing' do
+        merchant = create(:merchant)
+        item_params = ({
+                        "name": "Create Item",
+                        "unit_price": 17.99,
+                        "merchant_id": "#{merchant.id}"
+                        })
+        headers = {"CONTENT_TYPE" => "application/json"}
+
+        post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+        expect(response).to have_http_status(422) #unprocessable entity
+        expect(response.body).to match(/Validation failed: Description can't be blank/)
+      end
+
+      it 'ignores any attributes sent by the user which are not allowed' do
+        merchant = create(:merchant)
+        item_params = ({
+                        "name": "Create Item",
+                        "description": "A very useful item, you should buy it.",
+                        "unit_price": 17.99,
+                        "extra_param": "Going Rogue",
+                        "merchant_id": "#{merchant.id}"
+                        })
+        headers = {"CONTENT_TYPE" => "application/json"}
+
+        post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+        expect(response).to be_successful
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(item[:data]).to be_a(Hash)
+        expect(item[:data][:id]).to eq(merchant.items.last.id.to_s)
+        expect(item[:data]).not_to have_key(:extra_param)
       end
     end
   end
