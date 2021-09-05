@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-describe "Merchants API", type: :request do
+describe 'Merchants API', type: :request do
   describe 'happy path' do
-    it "gets all merchants" do
+    it 'gets all merchants' do
       create_list(:merchant, 3)
 
       get '/api/v1/merchants'
@@ -20,7 +22,7 @@ describe "Merchants API", type: :request do
         expect(merchant[:attributes][:name]).to be_a(String)
 
         expect(merchant).to have_key(:type)
-        expect(merchant[:type]).to eq "merchant"
+        expect(merchant[:type]).to eq 'merchant'
 
         expect(merchant).to have_key(:attributes)
         expect(merchant[:attributes]).to be_a Hash
@@ -135,13 +137,13 @@ describe "Merchants API", type: :request do
       expect(merchants[:data]).to eq([])
     end
 
-    it 'returns a status code 404 if a merchant does not exist' do #404 Not Found
-      get "/api/v1/merchants/#{9999999999999999}"
+    it 'returns a status code 404 if a merchant does not exist' do # 404 Not Found
+      get '/api/v1/merchants/9999999999999999'
       expect(response).to have_http_status(404)
     end
 
     it 'returns a status code 404 if request is not valid' do
-      get "/api/v1/merchants/string"
+      get '/api/v1/merchants/string'
 
       expect(response).to have_http_status(404)
       expect(response.body).to match(/Couldn't find Merchant with 'id'=string/)
