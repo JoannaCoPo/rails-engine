@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-describe "Merchant Items", type: :request do
+describe 'Merchant Items', type: :request do
   describe 'happy path' do
-    it "gets all items for a given merchant ID" do
+    it 'gets all items for a given merchant ID' do
       merchant = create(:merchant)
       item = create_list(:item, 5, merchant: merchant)
 
@@ -47,7 +49,7 @@ describe "Merchant Items", type: :request do
     end
 
     it 'returns a 404 status code and error message if the merchant does not exist' do
-      get "/api/v1/merchants/9999999999999999/items"
+      get '/api/v1/merchants/9999999999999999/items'
 
       expect(response.status).to eq(404)
       expect(response.body).to match(/Couldn't find Merchant with 'id'=9999999999999999/)
