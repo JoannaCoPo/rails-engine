@@ -6,7 +6,7 @@ FactoryBot.define do
 
     factory :merchant_plus_items do
       transient do
-        items_count { 6 }
+        items_count { 5 }
       end
 
       after(:create) do |merchant, evaluator|
