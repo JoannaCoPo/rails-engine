@@ -3,7 +3,23 @@
 module ExceptionHandler
   extend ActiveSupport::Concern
 
+  class MissingToken < StandardError; end
+
+  class InvalidToken < StandardError; end
+
   included do
+    rescue_from ActiveRecord::RecordInvalid do |exception|
+      json_response({ message: exception.message }, :unprocessable_entity)
+    end
+
+    rescue_from ExceptionHandler::MissingToken do |exception|
+      json_response({ message: exception.message }, :unprocessable_entity)
+    end
+
+    rescue_from ExceptionHandler::InvalidToken do |exception|
+      json_response({ message: exception.message }, :unprocessable_entity)
+    end
+
     rescue_from ActiveRecord::RecordNotFound do |exception|
       json_response({ message: exception.message }, :not_found)
     end
