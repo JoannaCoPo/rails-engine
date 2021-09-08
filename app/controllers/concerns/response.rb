@@ -5,7 +5,7 @@ module Response
     render json: object, status: status
   end
 
-  def search_error
-    render json: { error: 'Invalid request' }, status: 400
+  def no_match
+    render json: { error: 'Not found' }, status: 404
   end
 end
