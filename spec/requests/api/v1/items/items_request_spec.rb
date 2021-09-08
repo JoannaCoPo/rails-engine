@@ -35,12 +35,12 @@ describe 'Items Requests', type: :request do
 
     it 'can create a new item with valid attributes' do
       merchant = create(:merchant)
-      item_params = ({
+      item_params = {
                       "name": "Create Item",
                       "description": "A very useful item, you should buy it.",
                       "unit_price": 17.99,
                       "merchant_id": "#{merchant.id}"
-                      })
+                      }
       headers = {"CONTENT_TYPE" => "application/json"}
 
       post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
