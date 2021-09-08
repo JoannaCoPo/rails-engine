@@ -5,7 +5,7 @@ class Merchant < ApplicationRecord
   has_many :invoices
 
   def self.search_merchant_with_query(query)
-    where('name ILIKE ?', "%#{query}%")
+    order(:name).where('name ILIKE ?', "%#{query}%").first
   end
 end
 
