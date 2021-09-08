@@ -9,10 +9,6 @@ Rails.application.routes.draw do
 
       resources :items, only: %i[index create]
       resources :merchants, only: %i[index show]
-      # resources :items, only: [:index]
-      # get 'merchants/:id/items', to: 'merchants/items#index'
-      # get 'merchants/find', to: 'merchants/search#find'
-
     end
   end
 end
