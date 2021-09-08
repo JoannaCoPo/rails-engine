@@ -6,6 +6,7 @@ module Response
   end
 
   def no_match
-    render json: { error: 'Not found' }, status: 404
+    render json: { error: 'Not found', messages: ['Unable to find any results that match the search criteria.'] },
+           status: 404
   end
 end
