@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
       namespace :revenue do
         get '/merchants', to: 'merchants#most_revenue' #naming per postman test
+        get '/merchants/:id', to: 'merchants#total_revenue'
       end
     end
   end
