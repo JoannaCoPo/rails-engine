@@ -3,7 +3,7 @@
 class Merchant < ApplicationRecord
   has_many :items, dependent: :destroy
   has_many :invoices
-  # has_many :invoice_items, through: :items
+  has_many :invoice_items, through: :items
   # has_many :transactions, through: :invoice_items
 
   def self.search_merchant_with_query(query)
@@ -12,13 +12,19 @@ class Merchant < ApplicationRecord
 
 # revenue = Number of units sold * average price.
 
-  def top_revenue(query)
+  def self.top_revenue(query)
     # joins table invoice items or invoice?
     # access transactions for successful transaction and shipped status
     # organize by merchant id
     # grab all merch and set revenue as quanity * unit_price?
     # order descending
     # do i want to limit this?
+    joins(invoice_items: {invoice: :transactions})
+    .where("transactions.result = 'success' AND invoices.status = 'shipped'")
+    .group("merchants.id")
+    .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
+    .order("revenue DESC")
+    .limit(query)
   end
 end
 
