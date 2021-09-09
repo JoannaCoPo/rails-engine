@@ -13,7 +13,6 @@ class Item < ApplicationRecord
   end
 
   def self.search_price(query_params)
-    # require "pry"; binding.pry
     # assign hash keys - min and max
     min = query_params[:min_price]
     max = query_params[:max_price]
