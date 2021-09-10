@@ -10,22 +10,8 @@ class Merchant < ApplicationRecord
   def self.search_merchant_with_query(query)
     order(:name).where('name ILIKE ?', "%#{query}%").first
   end
-  # ILIKE
-  # Allows matching of strings based on comparison with a pattern but is
-  # case-insensitive.
 
-  # <subject> ILIKE <pattern> [ ESCAPE <escape> ]
-  #
-  # ILIKE( <subject> , <pattern> [ , <escape> ] )
-
-# revenue = Number of units sold * average price.
   def self.top_revenue(query)
-    # joins table invoice items or invoice?
-    # access transactions for successful transaction and shipped status
-    # organize by merchant id
-    # grab all merch and set revenue as quanity * unit_price?
-    # order descending
-    # do i want to limit this?
     joins(invoice_items: {invoice: :transactions})
     .where("transactions.result = 'success' AND invoices.status = 'shipped'")
     .group("merchants.id")
