@@ -54,6 +54,20 @@ describe 'Items Requests', type: :request do
       expect(created_item.merchant_id).to eq(item_params[:merchant_id].to_i)
     end
 
+    it 'updates and item and returns 202 status with valid attributes' do
+      id = create(:item).id
+      previous_description = Item.last.description
+      item_params = { description: "Cool new thing" }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find(id)
+
+      expect(response).to be_successful
+      expect(item.description).to_not eq(previous_description)
+      expect(item.description).to eq("Cool new thing")
+    end
+
     describe 'sad paths/edge cases' do
       it 'returns an empty array when no data is available' do
         get '/api/v1/items'
