@@ -9,7 +9,8 @@ Rails.application.routes.draw do
 
       get 'merchants/:id/items', to: 'merchants/items#index'
 
-      resources :items, only: %i[index create]
+      resources :items, except: [:new, :edit]
+      # resources :items, only: %i[index create]
       resources :merchants, only: %i[index show]
 
       namespace :revenue do
