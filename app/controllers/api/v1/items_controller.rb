@@ -7,9 +7,18 @@ class Api::V1::ItemsController < ApplicationController
     json_response(ItemSerializer.new(items))
   end
 
+  def show
+    json_response(ItemSerializer.new(item))
+  end
+
   def create
     item = Item.create!(item_params)
     json_response(ItemSerializer.new(item), :created)
+  end
+
+  def update
+    item = Item.update(params[:id], item_params)
+    json_response(ItemSerializer.new(item))
   end
 
   private
