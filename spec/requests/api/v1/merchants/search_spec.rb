@@ -9,9 +9,7 @@ describe 'Merchants Search', type: :request do
       merchant_2 = create(:merchant, name: 'Klein, Rempel and Sons')
       merchant_3 = create(:merchant, name: 'Willms and Sons')
 
-      # get "/api/v1/merchants/find/", params: { name: 'emPe'}
       get "/api/v1/merchants/find/", params: { name: 'sons'}
-
 
       expect(response).to be_successful
       expect(response.status).to eq(200)
