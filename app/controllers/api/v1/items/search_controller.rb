@@ -1,6 +1,5 @@
 class Api::V1::Items::SearchController < ApplicationController
   def find_all
-    # somehow handle non-valid responses first
     items_found = search(params)
     json_response(ItemSerializer.new(items_found))
   end

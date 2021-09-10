@@ -117,14 +117,6 @@ describe 'Merchants API', type: :request do
     end
   end
 
-  # Sad Path: the user did something which didn’t cause an error but didn’t work out the way
-  # they’d hoped. For example, searching for a merchant by name and getting zero results is a
-  # “sad path”
-
-  # Edge Case: the user did something which broke the functionality of an endpoint. For example,
-  # a user searches for an item based on a negative price, or searching between revenue dates
-  # where the end date comes before the start date.
-
   describe 'sad paths/edge cases' do
     it 'returns an empty array when no data is available' do
       get '/api/v1/merchants'

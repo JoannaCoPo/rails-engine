@@ -75,12 +75,3 @@ describe 'Items Find All Search', type: :request do
     end
   end
 end
-
-# COME BACK AND DO EDGE CASES IF TIME:
- # users should get an error if name and either/both of the price parameters are sent
-
-# allow the user to send one or more price-related query parameters, applicable to items only:
-#   min_price=4.99 should look for anything with a price equal to or greater than $4.99
-#   max_price=99.99 should look for anything with a price less than or equal to $99.99
-#   both min_price and max_price can be sent
-# for items, the user will send EITHER the name parameter OR either/both of the price parameters
